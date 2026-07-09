@@ -33,5 +33,5 @@ from PIL import Image
 img = Image.open('outputs/<name>.jpg')
 w, h = img.size
 img = img.resize((800, int(h * 800/w)), Image.LANCZOS)
-img.save('<name>.webp', format='WEBP', quality=88)
+img.save('<name>.jpg', format='WEBP', quality=88)
 "
