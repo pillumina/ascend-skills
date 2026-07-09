@@ -1,0 +1,211 @@
+# Ascend NPU hardware reference.
+#
+# Sources (in order of authority):
+#   1. support.huawei.com/enterprise/zh/doc/EDOC1100317202  — Atlas 800T A2 official spec (910B2)
+#   2. e.huawei.com/cn/products/computing/ascend/atlas-900-a3-superpod — Atlas 900 A3 SuperPoD official spec (910C)
+#   3. awesome-ascend-skills/skills/profiling/training-mfu-calculator — MindStudio-Agent内置MFU计算器 (华为官方工具链)
+#   4. blog.ailemon.net/2025/05/24/huawei-ascend-npu-params-for-ai/ — 第三方汇总, 交叉验证用
+#
+# 所有算力值均标注来源。官方来源优先, 第三方来源仅作参考。
+# peak_fp16_tflops 为主参考值 (标量), 保持向后兼容。
+# peak_fp16_tflops_binning 为官方文档中的分bin范围。
+#
+# 片上内存 (HBM) 带宽交叉验证:
+#   910B2: 1600 GB/s (单die, 官方文档 EDOC1100317202)
+#   910C:  3200 GB/s (双die, 官方 Atlas 900 A3 产品页)
+#   → 3200 = 2 × 1600, 双die聚合与单die带宽一致 ✓
+#   → NVIDIA A100 (80GB HBM2e): 2.0 TB/s = 25 GB/s per GB
+#     910B2 (64GB HBM2e): 1600 GB/s = 25 GB/s per GB — 同代HBM2e密度相当 ✓
+#
+# 第三方来源广泛引用的 392 GB/s (910B2) 与官方文档 1600 GB/s 矛盾,
+# 可能为早期非官方估算值或单一HBM stack带宽。以官方文档为准。
+#
+# 架构标签 (A1/A2/A3) 对应 Atlas 平台代际:
+#   A1 = 第一代 DaVinci (910A, 2019)
+#   A2 = 第二代 DaVinci, Cube/Vector 解耦 (910B1/B2/B3/B4, 2021-2022)
+#   A3 = 第三代, 双die Chiplet 封装 (910C, 2025 Q1)
+
+version: 2
+
+architecture_notes:
+  A1: |
+    第一代 DaVinci 架构 (2019)。AI Core 内 Cube/Vector 共享调度,
+    无明显解耦特征。profiling 中 AIC_* / AIV_* 流水线阶段概念在
+    此代不适用。910A 已停产, 现网存量极少。
+  A2: |
+    第二代 DaVinci 架构 (2021-2022)。Cube/Vector 解耦架构。
+    AI Core 内的 Cube 单元和 Vector 单元共用 L1 buffer,
+    通过独立的 MTE/DMA 通道访问。profiling 中的 AIC_* 和
+    AIV_* 流水线阶段反映两个单元的独立时间。Cube 和 Vector
+    不完全并行 —— aicore_time 和 aiv_time 的总和 ≤ wall time。
+    HBM 带宽 1600 GB/s (官方文档 EDOC1100317202)。
+  A3: |
+    第三代 DaVinci 架构 (2025 Q1)。双 die Chiplet 封装 (SMIC N+2),
+    单卡等效两颗 A2 die。每 die 独立具备 Cube/Vector 解耦,
+    HBM 总量 128 GB (2×64 GB), 聚合带宽 3.2 TB/s。
+    D2D 互联 784 GB/s 双向 (官方 Atlas 900 A3 产品页)。
+    profiling 中 aicore_time / aiv_time 总和可以大于 wall time
+    (两个 die 上的 Cube 和 Vector 可以真正并行)。
+
+devices:
+
+  # =========================================================================
+  # A1 generation
+  # =========================================================================
+
+  ascend_910a:
+    display_name: "Ascend 910A"
+    architecture: "A1"
+    launch_year: 2019
+    peak_fp16_tflops: 256
+    peak_fp16_tflops_binning: null
+    peak_fp16_tflops_source: "多个第三方来源一致 (blog.ailemon.net, zhihu, CSDN)"
+    peak_int8_tops: 512
+    peak_int8_tops_source: "FP16 × 2 (Ascend 架构标准比例)"
+    memory_hbm_gb: 32
+    memory_bandwidth_gb_s: null
+    memory_bandwidth_source: null
+    hccs_interconnect_gb_s: null
+    tdp_watts: 350
+    tdp_source: "第三方汇总; 无官方文档确认"
+    status: "discontinued"
+    note: "已停产, 现网存量极少。HBM 带宽无可靠官方来源。"
+
+  # =========================================================================
+  # A2 generation
+  # =========================================================================
+
+  ascend_910b1:
+    display_name: "Ascend 910B1"
+    architecture: "A2"
+    launch_year: 2021
+    peak_fp16_tflops: 320
+    peak_fp16_tflops_binning: [313, 376]
+    peak_fp16_tflops_source: "第三方汇总; 320T 为 910B 初版常见引用值。官方文档 EDOC1100317202 分bin范围 [313, 376]"
+    peak_int8_tops: 640
+    peak_int8_tops_source: "FP16 × 2 (Ascend 架构标准比例)"
+    peak_fp32_tflops: null
+    memory_hbm_gb: 64
+    memory_bandwidth_gb_s: 1600
+    memory_bandwidth_source: "华为官方文档 EDOC1100317202: '片上内存…带宽为1600GB/s'"
+    hccs_interconnect_gb_s: 200
+    hccs_interconnect_source: "华为官方; 3× HCCS link 聚合"
+    tdp_watts: 400
+    tdp_source: "华为官方文档 EDOC1100317202: '最大功耗为400W'"
+    status: "superseded"
+    note: "初版 910B, 已被 910B2 替代。MindStudio-Agent MFU 计算器默认值 353 TFLOPS 位于分bin范围内。"
+
+  ascend_910b2:
+    display_name: "Ascend 910B2"
+    architecture: "A2"
+    launch_year: 2022
+    peak_fp16_tflops: 353
+    peak_fp16_tflops_binning: [313, 376]
+    peak_fp16_tflops_source: "awesome-ascend-skills/training-mfu-calculator (华为官方 MindStudio-Agent 内置 MFU 计算器)。官方文档 EDOC1100317202 分bin范围 [313, 376]: 2.504 PFLOPS (低bin) / 3.008 PFLOPS (高bin) ÷ 8 NPU。353 位于范围内, 为官方工具链默认参考值。"
+    peak_int8_tops: 706
+    peak_int8_tops_binning: [626, 752]
+    peak_int8_tops_source: "FP16 × 2 (Ascend 架构标准比例)。官方文档 EDOC1100317202 分bin推算。"
+    peak_fp32_tflops: 82
+    peak_fp32_tflops_source: "官方文档 EDOC1100317202: 0.656 PFLOPS ÷ 8 NPU = 82 TFLOPS (标准 FP32, 未启用 HF32 加速)"
+    memory_hbm_gb: 64
+    memory_hbm_type: "HBM2e"
+    memory_bandwidth_gb_s: 1600
+    memory_bandwidth_source: "华为官方文档 EDOC1100317202: '片上内存…容量为64GB。带宽为1600GB/s。'"
+    hccs_interconnect_gb_s: 200
+    hccs_interconnect_source: "华为官方; 3× HCCS link 聚合, 每link ~67 GB/s"
+    tdp_watts: 400
+    tdp_source: "华为官方文档 EDOC1100317202: '最大功耗为400W'"
+    status: "current"
+    note: "主流 A2 训练卡, vLLM-Ascend 推理最常见的目标硬件。第三方来源广泛引用的 392 GB/s HBM 带宽与官方文档 1600 GB/s 矛盾, 以官方文档为准。"
+
+  ascend_910b3:
+    display_name: "Ascend 910B3"
+    architecture: "A2"
+    launch_year: 2022
+    peak_fp16_tflops: 313
+    peak_fp16_tflops_binning: [313, 376]
+    peak_fp16_tflops_source: "第三方汇总 (blog.ailemon.net); 多个独立来源一致指向 313T 为低分bin。官方文档 EDOC1100317202 分bin范围 [313, 376]"
+    peak_int8_tops: 626
+    peak_int8_tops_binning: [626, 752]
+    peak_int8_tops_source: "FP16 × 2 (Ascend 架构标准比例); 官方文档分bin推算"
+    memory_hbm_gb: 64
+    memory_hbm_type: "HBM2e"
+    memory_bandwidth_gb_s: 1600
+    memory_bandwidth_source: "华为官方文档 EDOC1100317202; 与 910B2 同一物理设计"
+    hccs_interconnect_gb_s: 200
+    hccs_interconnect_source: "与 910B2 同一物理设计"
+    tdp_watts: 400
+    tdp_source: "华为官方文档 EDOC1100317202; 与 910B2 同一物理设计"
+    status: "current"
+    note: "910B2 的低分bin 版本。FP16 算力较 910B2 低约 11%。其他规格与 910B2 一致。"
+
+  ascend_910b4:
+    display_name: "Ascend 910B4"
+    architecture: "A2"
+    launch_year: 2022
+    peak_fp16_tflops: 280
+    peak_fp16_tflops_binning: null
+    peak_fp16_tflops_source: "第三方汇总 (blog.ailemon.net); 无官方文档确认"
+    peak_int8_tops: 560
+    peak_int8_tops_source: "FP16 × 2 (Ascend 架构标准比例)"
+    memory_hbm_gb: 32
+    memory_hbm_type: "HBM2e"
+    memory_bandwidth_gb_s: null
+    memory_bandwidth_source: null
+    hccs_interconnect_gb_s: null
+    tdp_watts: 310
+    tdp_source: "第三方汇总; 无官方文档确认"
+    status: "current"
+    note: "推理卡变体 (Atlas 800I A2), 半容量 HBM (32 GB)。HBM 带宽无可靠官方来源, 物理设计可能与 910B2 相同但降级。标注 null 而非推测。"
+
+  # =========================================================================
+  # A3 generation
+  # =========================================================================
+
+  ascend_910c:
+    display_name: "Ascend 910C"
+    architecture: "A3"
+    launch_year: 2025
+    peak_fp16_tflops: 800
+    peak_fp16_tflops_binning: [752, 800]
+    peak_fp16_tflops_source: "华为官网 Atlas 900 A3 SuperPoD 产品页 (e.huawei.com): 307.2 PFLOPS (高bin) / 288.7 PFLOPS (低bin) ÷ 384 NPU = 800 / 752 TFLOPS"
+    peak_int8_tops: 1600
+    peak_int8_tops_binning: [1504, 1600]
+    peak_int8_tops_source: "FP16 × 2 (Ascend 架构标准比例); Atlas 900 A3 产品页分bin推算"
+    memory_hbm_gb: 128
+    memory_hbm_type: "HBM (具体代际未公开; 独立来源报告为 HBM3)"
+    memory_bandwidth_gb_s: 3200
+    memory_bandwidth_source: "华为官网 Atlas 900 A3 SuperPoD 产品页: '384 * 128GB 片上内存, 带宽速率最大3.2TB/s'"
+    hccs_interconnect_gb_s: 784
+    hccs_interconnect_source: "华为官网 Atlas 900 A3 SuperPoD 产品页: 'D2D双向带宽784GB/s'"
+    tdp_watts: null
+    tdp_source: "无可靠官方来源; 第三方估计 ~550W, 不宜写入此文件"
+    status: "current"
+    note: |
+      双 die Chiplet (2× A2 die 等效), SMIC N+2 工艺。
+      HBM 带宽 3.2 TB/s = 2 × 1600 GB/s, 与 A2 单die 带宽交叉验证一致。
+      D2D 互联 784 GB/s 双向 (die-to-die via HCCS)。
+      D2D 带宽与 HBM 带宽的比率 (784 / 3200 ≈ 0.25) 反映了 die 间通信
+      相对片上内存访问的带宽不对称 —— 这对 EP/TP 通信模式有直接影响。
+
+  # =========================================================================
+  # 推理卡
+  # =========================================================================
+
+  ascend_310p:
+    display_name: "Ascend 310P"
+    architecture: "A2"
+    launch_year: 2022
+    peak_fp16_tflops: 70
+    peak_fp16_tflops_source: "华为官方产品页 (Atlas 300I Pro)"
+    peak_int8_tops: 140
+    peak_int8_tops_source: "华为官方产品页 (Atlas 300I Pro)"
+    memory_hbm_gb: 24
+    memory_hbm_type: "LPDDR4X"
+    memory_bandwidth_gb_s: 204.8
+    memory_bandwidth_source: "华为官方产品页: LPDDR4X 384位, 204.8 GB/s"
+    hccs_interconnect_gb_s: null
+    tdp_watts: 72
+    tdp_source: "华为官方产品页"
+    status: "current"
+    note: "推理卡, 无 HCCS 互联。LPDDR4X 而非 HBM。不在 vLLM-Ascend 训练/推理覆盖范围内。"

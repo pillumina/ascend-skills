@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "skills": {
+    "arxiv-paper-analyzer": {
+      "source": "pillumina/claude-skills",
+      "sourceType": "github",
+      "skillPath": "arxiv-paper-analyzer/SKILL.md",
+      "computedHash": "87d1923100164e567cd8c708536937cb9151b7f3024cabd1a9dd5e2cf5957d93"
+    },
+    "ascend-profiler-analysis": {
+      "source": "pillumina/claude-skills",
+      "sourceType": "github",
+      "skillPath": "ascend-profiler-analysis/SKILL.md",
+      "computedHash": "98cb6acb114e146359a478a93c4838e2b8a81a46a15fb7e3ae8cc49d687409a2"
+    },
+    "ascend-inference-profiling": {
+      "source": "pillumina/claude-skills",
+      "sourceType": "github",
+      "skillPath": "ascend-inference-profiling/SKILL.md",
+      "computedHash": "0f505ff99889c6081464ad3e4af3bb0e8273483b6722179d8eff56310cec95d0"
+    },
+    "msprof-analyze": {
+      "source": "pillumina/claude-skills",
+      "sourceType": "github",
+      "skillPath": "msprof-analyze/SKILL.md",
+      "computedHash": "a24b2a2fcb0d6d9502bac6c9027f5d85d6af3773ef77ecbc8bdd123144e090ab"
+    },
+    "topic-researcher": {
+      "source": "pillumina/claude-skills",
+      "sourceType": "github",
+      "skillPath": "topic-researcher/SKILL.md",
+      "computedHash": "b705ad931c0da3ff3a6fb36459d3711c994e9ed302ea31fabe3da4c24f43d007"
+    },
+    "youtube-video-processor": {
+      "source": "pillumina/claude-skills",
+      "sourceType": "github",
+      "skillPath": "youtube-video-processor/SKILL.md",
+      "computedHash": "a78dac42e646250b2e1707f6243fd629e5bf26ea6ee13cc6290dd645c5c34703"
+    }
+  }
+}
