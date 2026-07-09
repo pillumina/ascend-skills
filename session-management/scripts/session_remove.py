@@ -11,14 +11,11 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-LIB_DIR = ROOT / "lib"
-MM_SCRIPTS = ROOT / "machine-management" / "scripts"
-for _p in (str(LIB_DIR), str(MM_SCRIPTS)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from _workflow_common import remove_container  # noqa: E402
-from vaws_session_state import (  # noqa: E402
+from _lib._workflow_common import remove_container  # noqa: E402
+from _lib.vaws_session_state import (  # noqa: E402
     load_session_lookup,
     mark_session_status,
     release_all_session_leases,
@@ -50,7 +47,7 @@ def run_git(args: list[str], *, check: bool = False) -> subprocess.CompletedProc
 
 
 def stop_session(session_id: str, *, session_file: Path | None = None, force: bool) -> dict[str, Any]:
-    script = ROOT / ".agents" / "skills" / "vllm-ascend-serving" / "scripts" / "serve_stop.py"
+    script = ROOT / "vllm-ascend-serving" / "scripts" / "serve_stop.py"
     cmd = [sys.executable, str(script)]
     if session_file is not None:
         cmd.extend(["--session-file", str(session_file)])

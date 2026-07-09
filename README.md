@@ -30,11 +30,14 @@ Ascend NPU skills for vLLM-Ascend workloads — profiling, serving, benchmarking
 ### Dependency Chain
 
 ```
-machine-management → session-management → ascend-profiling-collection → ascend-inference-profiling
-                                         → vllm-ascend-serving → vllm-ascend-benchmark
+machine-management  ──→  session-management  ──→  ascend-profiling-collection  ──→  ascend-inference-profiling
+                      ──→  vllm-ascend-serving  ──→  vllm-ascend-benchmark
+                      ──→  ascend-memory-profiling
 ```
 
-Shared library at `lib/` — imported by all infra/runtime/analysis skills.
+Each skill is **self-contained** — it bundles its own `_lib/` with the shared framework
+functions it needs. No cross-skill imports beyond stdlib. A skill can be installed
+independently via `npx skills add --skill <name>`.
 
 ## Installation
 

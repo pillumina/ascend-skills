@@ -14,9 +14,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
-from vaws_local_state import ROOT, STATE_DIR, WorkspaceStateError, ensure_state_dir, utc_now_iso
-from vaws_session_id import load_current_session_binding, normalize_session_id
-from vaws_validate import parse_device_csv
+from _lib.vaws_local_state import ROOT, STATE_DIR, WorkspaceStateError, ensure_state_dir, utc_now_iso
+from _lib.vaws_session_id import load_current_session_binding, normalize_session_id
+from _lib.vaws_validate import parse_device_csv
 
 SESSION_SCHEMA_VERSION = 1
 INDEX_SCHEMA_VERSION = 1

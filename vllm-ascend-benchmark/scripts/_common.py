@@ -14,14 +14,11 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-LIB_DIR = ROOT / "lib"
-if str(LIB_DIR) not in sys.path:
-    sys.path.insert(0, str(LIB_DIR))
 
-from vaws_session_state import load_session_lookup, session_benchmark_dir  # noqa: E402
-from vaws_validate import require_env_name  # noqa: E402
+from _lib.vaws_session_state import load_session_lookup, session_benchmark_dir  # noqa: E402
+from _lib.vaws_validate import require_env_name  # noqa: E402
 
-SERVING_SCRIPTS = ROOT / ".agents" / "skills" / "vllm-ascend-serving" / "scripts"
+SERVING_SCRIPTS = ROOT / "vllm-ascend-serving" / "scripts"
 NIGHTLY_CONFIGS_DIR = (
     ROOT / "vllm-ascend" / "tests" / "e2e" / "nightly"
     / "single_node" / "models" / "configs"
@@ -459,12 +456,11 @@ def _get_ssh_endpoint(
         container = remote["container"]
         return remote["host"], int(container["ssh_port"])
 
-    lib_dir = str(ROOT / "lib")
-    mm_dir = str(ROOT / "machine-management" / "scripts")
-    for p in (lib_dir, mm_dir):
-        if p not in sys.path:
-            sys.path.insert(0, p)
-    import inventory as inv_store
+    import importlib
+    _script_dir = Path(__file__).resolve().parent
+    if str(_script_dir) not in sys.path:
+        sys.path.insert(0, str(_script_dir))
+    from _lib import inventory as inv_store
     read_path = inv_store.read_inventory_path(
         inv_store.preferred_inventory_path(inv_store.DEFAULT_PATH)
     )

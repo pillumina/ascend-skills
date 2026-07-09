@@ -10,11 +10,10 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-LIB_DIR = ROOT / "lib"
 if str(LIB_DIR) not in sys.path:
     sys.path.insert(0, str(LIB_DIR))
 
-from vaws_session_state import load_index, load_leases, load_session_lookup, release_all_session_leases  # noqa: E402
+from _lib.vaws_session_state import load_index, load_leases, load_session_lookup, release_all_session_leases  # noqa: E402
 
 
 def print_json(data: dict[str, Any]) -> None:

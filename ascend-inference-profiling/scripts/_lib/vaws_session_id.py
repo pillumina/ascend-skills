@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from vaws_local_state import STATE_DIR, WorkspaceStateError, utc_now_iso
+from _lib.vaws_local_state import STATE_DIR, WorkspaceStateError, utc_now_iso
 
 SESSION_ID_PATTERN = re.compile(r"[^a-z0-9._-]+")
 MULTI_DASH_PATTERN = re.compile(r"-+")

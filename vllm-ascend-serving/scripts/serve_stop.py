@@ -31,7 +31,7 @@ from _common import (
     save_serving_state,
     ssh_exec,
 )
-from vaws_session_state import file_lock, release_service_port, session_lock_dir
+from _lib.vaws_session_state import file_lock, release_service_port, session_lock_dir
 
 
 GRACE_PERIOD_SECONDS = 5

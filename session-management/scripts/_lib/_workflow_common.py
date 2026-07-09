@@ -24,9 +24,9 @@ LIB_DIR = ROOT / "lib"
 if str(LIB_DIR) not in sys.path:
     sys.path.insert(0, str(LIB_DIR))
 
-import inventory as inventory_store  # noqa: E402
-import manage_machine as machine_ops  # noqa: E402
-from vaws_local_state import (  # noqa: E402
+from . import inventory as inventory_store  # noqa: E402
+from . import manage_machine as machine_ops  # noqa: E402
+from _lib.vaws_local_state import (  # noqa: E402
     WorkspaceStateError,
     ensure_profile,
     load_profile,

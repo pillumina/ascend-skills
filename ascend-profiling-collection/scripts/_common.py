@@ -28,9 +28,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-LIB_DIR = ROOT / "lib"
-MM_SCRIPTS = ROOT / "machine-management" / "scripts"
-SERVING_SCRIPTS = ROOT / ".agents" / "skills" / "vllm-ascend-serving" / "scripts"
+SERVING_SCRIPTS = ROOT / "vllm-ascend-serving" / "scripts"
 
 PROGRESS_SENTINEL = "__VAWS_PROFILING_COLLECTION_PROGRESS__="
 COLLECTION_STATE_DIR = ROOT / ".vaws-local" / "ascend-profiling-collection" / "runs"

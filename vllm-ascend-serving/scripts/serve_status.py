@@ -30,7 +30,7 @@ from _common import (
     save_serving_state,
     ssh_exec,
 )
-from vaws_session_state import release_service_port
+from _lib.vaws_session_state import release_service_port
 
 
 def check_alive(ep, pid: int) -> bool:

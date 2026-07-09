@@ -11,8 +11,8 @@ from __future__ import annotations
 import argparse
 from typing import Sequence
 
-import manage_machine as machine_ops
-from _workflow_common import (  # noqa: E402
+from _lib import manage_machine as machine_ops
+from _lib._workflow_common import (  # noqa: E402
     WorkflowError,
     bootstrap_container,
     bootstrap_host_key,

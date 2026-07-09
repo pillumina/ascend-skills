@@ -29,7 +29,7 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any, BinaryIO, Iterable, Sequence
 
-from vaws_local_state import (  # noqa: E402
+from _lib.vaws_local_state import (  # noqa: E402
     INVENTORY_PATH,
     LEGACY_INVENTORY_PATH,
     ROOT,
@@ -38,14 +38,14 @@ from vaws_local_state import (  # noqa: E402
     resolve_inventory_read_path,
     utc_now_iso,
 )
-from vaws_session_state import (  # noqa: E402
+from _lib.vaws_session_state import (  # noqa: E402
     load_leases,
     load_session_lookup,
     release_all_session_leases,
     session_record_for_execution,
     session_serving_state_path,
 )
-from vaws_validate import (  # noqa: E402
+from _lib.vaws_validate import (  # noqa: E402
     ValidationError,
     ensure_child_path,
     require_env_name,
@@ -1493,7 +1493,7 @@ def _run_json_command(cmd: list[str], *, cwd: Path = ROOT, relay_stderr: bool = 
 
 
 def parity_derived_args(target: RemoteTarget, *, force_reinstall: bool = False) -> dict[str, Any]:
-    script = ROOT / ".agents" / "skills" / "remote-code-parity" / "scripts" / "parity_sync.py"
+    script = ROOT / "remote-code-parity" / "scripts" / "parity_sync.py"
     cmd = [sys.executable, str(script), "--print-derived-args"]
     if target.session_file:
         cmd.extend(["--session-file", str(target.session_file)])
@@ -1510,7 +1510,7 @@ def parity_derived_args(target: RemoteTarget, *, force_reinstall: bool = False) 
 
 
 def _parity_plan_manifest(derived: dict[str, Any]) -> dict[str, Any]:
-    script = ROOT / ".agents" / "skills" / "remote-code-parity" / "scripts" / "remote_code_parity.py"
+    script = ROOT / "remote-code-parity" / "scripts" / "remote_code_parity.py"
     cmd = [
         sys.executable,
         str(script),
@@ -1547,7 +1547,7 @@ def _repo_install_reasons(repo: dict[str, Any]) -> list[str]:
 
 
 def _consent_state(derived: dict[str, Any]) -> dict[str, Any]:
-    scripts = ROOT / ".agents" / "skills" / "remote-code-parity" / "scripts"
+    scripts = ROOT / "remote-code-parity" / "scripts"
     if str(scripts) not in sys.path:
         sys.path.insert(0, str(scripts))
     try:
@@ -1636,7 +1636,7 @@ def sync_plan(target: RemoteTarget, *, mode: str, force_reinstall: bool = False)
 def sync_apply(target: RemoteTarget, *, mode: str, force_reinstall: bool = False, dry_run: bool = False) -> dict[str, Any]:
     started_at = now_iso()
     start = time.monotonic()
-    script = ROOT / ".agents" / "skills" / "remote-code-parity" / "scripts" / "parity_sync.py"
+    script = ROOT / "remote-code-parity" / "scripts" / "parity_sync.py"
     cmd = [sys.executable, str(script)]
     if target.session_file:
         cmd.extend(["--session-file", str(target.session_file)])
@@ -1674,7 +1674,7 @@ def sync_apply(target: RemoteTarget, *, mode: str, force_reinstall: bool = False
 def call_service(action: str, target: RemoteTarget, extra_args: list[str]) -> dict[str, Any]:
     started_at = now_iso()
     start = time.monotonic()
-    scripts = ROOT / ".agents" / "skills" / "vllm-ascend-serving" / "scripts"
+    scripts = ROOT / "vllm-ascend-serving" / "scripts"
     script_map = {
         "start": scripts / "serve_start.py",
         "status": scripts / "serve_status.py",
@@ -1803,7 +1803,7 @@ def cleanup(
         elif dry_run:
             actions.append({"action": "session-remove", "session_id": target.session_id, "dry_run": True})
         else:
-            script = ROOT / ".agents" / "skills" / "session-management" / "scripts" / "session_remove.py"
+            script = ROOT / "session-management" / "scripts" / "session_remove.py"
             cmd = [sys.executable, str(script), "--session-file", str(target.session_file), "--remove-container"]
             if leases:
                 cmd.append("--release-leases")

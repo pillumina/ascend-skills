@@ -28,15 +28,12 @@ from pathlib import Path
 from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[2]
-LIB_DIR = ROOT / "lib"
-MM_SCRIPTS = ROOT / "machine-management" / "scripts"
 
-for _p in (str(LIB_DIR), str(MM_SCRIPTS)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-import inventory as inventory_store  # noqa: E402
-from vaws_session_state import load_session_lookup, session_record_for_execution  # noqa: E402
+from _lib import inventory as inventory_store  # noqa: E402
+from _lib.vaws_session_state import load_session_lookup, session_record_for_execution  # noqa: E402
 
 ANALYSIS_STATE_DIR = ROOT / ".vaws-local" / "profiling-analysis" / "runs"
 PROGRESS_SENTINEL = "__VAWS_PROFILE_ANALYSIS_PROGRESS__="

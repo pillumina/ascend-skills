@@ -11,7 +11,7 @@ from __future__ import annotations
 import argparse
 from typing import Sequence
 
-from _workflow_common import (  # noqa: E402
+from _lib._workflow_common import (  # noqa: E402
     WorkflowError,
     emit_progress,
     find_record,

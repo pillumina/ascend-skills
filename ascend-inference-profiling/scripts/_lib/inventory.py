@@ -23,7 +23,7 @@ LIB_DIR = Path(__file__).resolve().parents[2] / "lib"
 if str(LIB_DIR) not in sys.path:
     sys.path.insert(0, str(LIB_DIR))
 
-from vaws_local_state import (  # noqa: E402
+from .vaws_local_state import (  # noqa: E402
     INVENTORY_PATH as DEFAULT_PATH,
     LEGACY_INVENTORY_PATH,
     ensure_state_dir,

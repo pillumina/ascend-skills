@@ -16,21 +16,18 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-LIB_DIR = ROOT / "lib"
-MM_SCRIPTS = ROOT / "machine-management" / "scripts"
 
-for _p in (str(LIB_DIR), str(MM_SCRIPTS)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-import inventory as inventory_store  # noqa: E402
-from vaws_local_state import ensure_state_dir  # noqa: E402
-from vaws_remote_toolbox import (  # noqa: E402
+from _lib import inventory as inventory_store  # noqa: E402
+from _lib.vaws_local_state import ensure_state_dir  # noqa: E402
+from _lib.vaws_remote_toolbox import (  # noqa: E402
     SshEndpoint,
     resolve_remote_target,
 )
-from vaws_session_state import session_serving_state_path  # noqa: E402
-from vaws_validate import parse_device_csv  # noqa: E402
+from _lib.vaws_session_state import session_serving_state_path  # noqa: E402
+from _lib.vaws_validate import parse_device_csv  # noqa: E402
 
 SERVING_STATE_DIR = ROOT / ".vaws-local" / "serving"
 PROGRESS_SENTINEL = "__VAWS_SERVING_PROGRESS__="

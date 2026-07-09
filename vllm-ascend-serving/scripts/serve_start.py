@@ -55,8 +55,8 @@ from _common import (
     select_devices,
     ssh_exec,
 )
-from vaws_session_state import allocate_service_port, file_lock, release_service_port, session_lock_dir
-from vaws_validate import parse_device_csv, require_env_name
+from _lib.vaws_session_state import allocate_service_port, file_lock, release_service_port, session_lock_dir
+from _lib.vaws_validate import parse_device_csv, require_env_name
 
 RUNTIME_DIR_BASE = ".vaws-runtime/serving"
 DEFAULT_HEALTH_TIMEOUT = 300
