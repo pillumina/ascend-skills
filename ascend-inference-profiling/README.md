@@ -149,7 +149,7 @@ Useful for iterating on report formatting or diagnosis rules without re-running 
 | `observations` | All preceding | `run_observations.json` | Unknown kernel collection, segmentation issue logging, config detection edge cases, version gap detection. Persistent aggregate via `observations_history.jsonl`. |
 | `report` | All preceding | `report/report.md`, `report/report.xlsx`, `report/report.html` | 13-chapter narrative markdown, multi-sheet Excel, single-file interactive HTML with timeline, operator cards, and bubble tracing. |
 
-![11-stage analysis pipeline](https://github.com/pillumina/ascend-skills/raw/refs/heads/main/docs/ascend-inference-profiling/pipeline-stages.png)
+![11-stage analysis pipeline](../docs/ascend-inference-profiling/pipeline-stages.png)
 
 *MSTT is optional (`--mstt` flag). All stages are independently re-runnable via `--from-stage` / `--to-stage` / `--only-stage`.*
 
@@ -184,7 +184,7 @@ Useful for iterating on report formatting or diagnosis rules without re-running 
 | Context parallelism | HCCL allgather + step type | PCP / DCP / both / none |
 | Reduced-work ranks | `has_attention` asymmetry | detected / not detected |
 
-![7 config signature detections](https://github.com/pillumina/ascend-skills/raw/refs/heads/main/docs/ascend-inference-profiling/config-signatures.png)
+![7 config signature detections](../docs/ascend-inference-profiling/config-signatures.png)
 
 *Detection engine from `characterize.py`. Seven independent detectors normalize heterogeneous signals into a unified `config_signatures` block. Each has an annotated confidence level.*
 
@@ -196,7 +196,7 @@ In **remote mode**, the analysis framework executes on the Ascend host — profi
 
 In **local mode**, the pipeline runs directly on your machine against data you already have locally. The `profile_analyze.py` / `profile_sweep.py` wrappers are remote-only; the `ascend_profile` package (`python3 -m ascend_profile.analyze`) runs identically in both modes.
 
-![Remote SSH vs local direct execution](https://github.com/pillumina/ascend-skills/raw/refs/heads/main/docs/ascend-inference-profiling/execution-model.png)
+![Remote SSH vs local direct execution](../docs/ascend-inference-profiling/execution-model.png)
 
 *Both paths produce identical analysis artifacts. Remote mode is for profiling data on Ascend hosts; local mode is for data already pulled to your machine.*
 
@@ -204,7 +204,7 @@ In **local mode**, the pipeline runs directly on your machine against data you a
 
 The agent interprets pipeline outputs, not the pipeline itself. Scripts produce deterministic data — the agent synthesizes findings, cross-references the diagnostic playbook, and presents root causes with one follow-up question at a time.
 
-![Agent interaction flow](https://github.com/pillumina/ascend-skills/raw/refs/heads/main/docs/ascend-inference-profiling/agent-interaction.png)
+![Agent interaction flow](../docs/ascend-inference-profiling/agent-interaction.png)
 
 *Participatory calibration loop (rightmost branch): the pipeline collects observation data, the agent proposes knowledge base updates, the user confirms, and pytest validates.*
 
@@ -223,13 +223,13 @@ knowledge/vllm-ascend/
 
 The playbook is the primary reference. Per-version config guides and changelog are consulted only when exact default values or version-gap confirmation is needed.
 
-![Three-layer knowledge architecture](https://github.com/pillumina/ascend-skills/raw/refs/heads/main/docs/ascend-inference-profiling/knowledge-architecture.png)
+![Three-layer knowledge architecture](../docs/ascend-inference-profiling/knowledge-architecture.png)
 
 ### Hardware architecture
 
 The pipeline's bound classification and pipeline stage decomposition target the Ascend DaVinci architecture. A2 (910B2/B3) is a single-die Cube/Vector decoupled design. A3 (910C) is a dual-die chiplet — two A2-equivalent dies with independent Cube/Vector units that can truly overlap.
 
-![A2 vs A3 hardware architecture](https://github.com/pillumina/ascend-skills/raw/refs/heads/main/docs/ascend-inference-profiling/hardware-architecture.png)
+![A2 vs A3 hardware architecture](../docs/ascend-inference-profiling/hardware-architecture.png)
 
 *All hardware capacity values are sourced from official Huawei documentation with annotated binning ranges. See `hardware_capabilities.yaml` for source references.*
 
