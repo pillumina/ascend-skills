@@ -10,6 +10,7 @@ Ascend NPU skills for vLLM-Ascend workloads — profiling, serving, benchmarking
 |-------|---------|--------|
 | [`ascend-profiling-collection`](./ascend-profiling-collection/) | Collect one Ascend torch-profiler case end-to-end on a remote NPU container | Active |
 | [`ascend-inference-profiling`](./ascend-inference-profiling/) | End-to-end profiling analysis for vLLM-Ascend inference | Active |
+| [`ascend-memory-profiling`](./ascend-memory-profiling/) | Profile and attribute HBM memory usage on Ascend NPU for vLLM serving | Active |
 | [`ascend-training-profiling`](./ascend-training-profiling/) | Profiling analysis for distributed training workloads | Planned |
 
 ### Infrastructure
@@ -50,5 +51,4 @@ npx skills add pillumina/ascend-skills --skill machine-management
 
 | Skill | Status | Location |
 |-------|--------|----------|
-| `ascend-memory-profiling` | Complementary — HBM memory attribution analysis | `maoxx241/vllm-ascend-workspace` |
-| `remote-code-parity` | Used by vllm-ascend-serving for code sync gate | `maoxx241/vllm-ascend-workspace` |
+| `remote-code-parity` | Used by vllm-ascend-serving + ascend-memory-profiling for code sync gate | `maoxx241/vllm-ascend-workspace` |
