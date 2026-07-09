@@ -30,7 +30,7 @@ python3 scripts/render_animated_diagram.py \
 # Then resize and convert for the repo:
 python3 -c "
 from PIL import Image
-img = Image.open('outputs/<name>.png')
+img = Image.open('outputs/<name>.jpg')
 w, h = img.size
 img = img.resize((800, int(h * 800/w)), Image.LANCZOS)
 img.save('<name>.webp', format='WEBP', quality=88)
