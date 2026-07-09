@@ -27,9 +27,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
-ROOT = Path(__file__).resolve().parents[4]
-LIB_DIR = ROOT / ".agents" / "lib"
-MM_SCRIPTS = ROOT / ".agents" / "skills" / "machine-management" / "scripts"
+ROOT = Path(__file__).resolve().parents[2]
+LIB_DIR = ROOT / "lib"
+MM_SCRIPTS = ROOT / "machine-management" / "scripts"
 
 for _p in (str(LIB_DIR), str(MM_SCRIPTS)):
     if _p not in sys.path:
